@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request
+import util
 app = Flask(__name__)
 
 @app.route("/",methods=["GET","POST"])
 def home():
-    if request.method == "GET":
-        return render_template("index.html")
-    else:
+    if request.method == "POST":
         query = request.form.get("query")
-        return render_template("index.html")
+        results = util.get_pages(query)
+    return render_template("index.html")
         
 if __name__ == "__main__":
     app.debug = True;
