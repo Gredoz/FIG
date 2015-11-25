@@ -6,7 +6,7 @@ def get_pages(query, amt):
     '''Returns a list of results for a query
     @query is the search term
     @amt is the number of desired results'''
-    pages = google.search(q,num=amt,start=0,stop=amt)
+    pages = google.search(query,num=amt,start=0,stop=amt)
     plist = []
     for r in pages:
         plist.append(r)
@@ -17,22 +17,36 @@ def get_text(url):
     @url is the url of the page'''
     url = urllib2.urlopen(url)
     page = unicode(url.read(),'utf-8')
-    soup = bs4.BeautifulSoup(page,'html.parser')
+    soup = bs4.BeautifulSoup(page, "html.parser")
+    return soup   #Not sure if this works
 
 def find(query):
     index = query.find(' ')
     if (index != -1):
         question = query[:index]
-        print question
-    
+        #print question
+        question = (question.lower())
+        #print question
+        if (question == 'who'):
+            who(query)
+        if (question == 'when'):
+            when(query)
+        if (question == 'where'):
+            where(query)
+            
+            
         
-def who():
-    pass
+def who(query):
+    link = get_pages(query, 1)
+    print link
+    text = get_text(link[0])
+    print text
+    
 
-def when():
+def when(query):
     pass
     
-def where():
+def where(query):
     pass
     
 if __name__ == "__main__":
