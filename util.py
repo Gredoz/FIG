@@ -18,6 +18,12 @@ def get_text(url):
     url = urllib2.urlopen(url)
     page = unicode(url.read(),'utf-8')
     soup = bs4.BeautifulSoup(page, "html.parser")
+    soup = re.compile(r'<.*?>').sub("",soup)
+    print soup
+    paragraphs = []
+    for p in soup.find_all("<>"):
+        paragraphs.append(p.get_text().encode("utf-8"))
+        
     return soup   #Not sure if this works
 
 def find(query):
