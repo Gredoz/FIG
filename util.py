@@ -30,21 +30,35 @@ def get_text(url):
         return ""
 
 def find(query):
+    '''Parses the query and runs the appropriate function
+    @query is the appropriate string
+    returns a list of 5 elements'''
     index = query.find(' ')
-    if (index != -1):
-        question = query[:index]
-        #print question
-        question = (question.lower())
-        #print question
-        if (question == 'who'):
-            who(query)
-        if (question == 'when'):
-            when(query)
-        if (question == 'where'):
-            where(query)
+    if (index == -1):
+        return None
+    question = query[:index]
+    #print question
+    question = (question.lower())
+    #print question
     
+    #who, when and where take 3 args
+    #first: the query
+    #second: how many pages to read. bigger number = slower, more accurate
+    #third: the length of the return list. if it is 5, it will return a list
+    #of the top 5 answers in descending order
+    if (question == 'who'):
+        ans = who(query,10,5)
+    elif (question == 'when',10,5):
+        ans = when(query)
+    elif (question == 'where',10,5):
+        ans = where(query)
+    top = []
+    for result in ans:
+        top.append((result[0][0],result[1]))
+    return top
 
-def who(query):
+
+def who(query,amt,amt_results):
     '''Returns a list of number of tuples that contain strings of the most common answers to the query'''
     word_list = []
 
@@ -52,10 +66,9 @@ def who(query):
     pattern = '([A-Z][a-z]+ [A-Z][a-z]+)|'
     name_prefix = '|'.join(extras.name_prefix.title().split())
     pattern += '((' + name_prefix + ')(\. )*([A-Z][a-z]+)+)'
-    print pattern
 
     #gets 10 url pages from the google api
-    links = get_pages(query, 10) 
+    links = get_pages(query, amt) 
     
     for link in links:
         #gets the text for each link 
@@ -68,10 +81,10 @@ def who(query):
     #takes list word_list and finds the 5 most common elements
     #top words is a list of tuples in order of most to least occurences
     #in each tuple index 0 is the string and index 1 number of occurences
-    top_words = collections.Counter(word_list).most_common(5)
-    print top_words
+    top_words = collections.Counter(word_list).most_common(amt_results)
+    return top_words
 
-def when(query):
+def when(query,amt,amt_results):
     '''Returns a list of number of tuples that contain strings of the most common answers to the query'''
     
     word_list = []    
@@ -82,33 +95,33 @@ def when(query):
     months = extras.months.title().replace(' ','|')
     pattern += '|(('+months+') \d{1,2}(st|nd|th)*, \d{4})'
     
-    links = get_pages(query, 10) 
+    links = get_pages(query, amt) 
 
     for link in links:
         text = get_text(link)
         link_list = re.findall(pattern, text)
         word_list += link_list
-    top_words = collections.Counter(word_list).most_common(5)
-    print top_words
+    top_words = collections.Counter(word_list).most_common(amt_results)
+    return top_words
     
-def where(query):
+def where(query,amt,amt_results):
     '''Returns a list of number of tuples that contain strings of the most common answers to the query'''
     
     word_list = []    
     pattern = '(([A-Z][a-z]+ )*([A-Z][a-z]+), ([A-Z][a-z]+\s*)+)'
-    links = get_pages(query, 10) 
+    links = get_pages(query, amt) 
 
     for link in links:
         text = get_text(link)
         link_list = re.findall(pattern, text)
         word_list += link_list
 
-    top_words = collections.Counter(word_list).most_common(5)
-    print top_words
+    top_words = collections.Counter(word_list).most_common(amt_results)
+    return top_words
 
     
 if __name__ == "__main__":
-    find("Where is the white house")
+    find("Who played Batman")
     
 
     
