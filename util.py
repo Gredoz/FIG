@@ -49,7 +49,10 @@ def who(query):
     word_list = []
 
     #Current pattern: Two title cased words separated by a space    
-    pattern = ' [A-Z][a-z]+ [A-Z][a-z]+ '
+    pattern = '([A-Z][a-z]+ [A-Z][a-z]+)|'
+    name_prefix = '|'.join(extras.name_prefix.title().split())
+    pattern += '((' + name_prefix + ')(\. )*([A-Z][a-z]+)+)'
+    print pattern
 
     #gets 10 url pages from the google api
     links = get_pages(query, 10) 
@@ -72,7 +75,13 @@ def when(query):
     '''Returns a list of number of tuples that contain strings of the most common answers to the query'''
     
     word_list = []    
-    pattern = ' \d+/\d+/\d+ '
+
+    #checks for standard 11/11/15 formatting
+    pattern = '(\d{1,4}/\d{1,2}/\d{1,4})'
+    #next two lines check if it matches a format like January 2, 2015
+    months = extras.months.title().replace(' ','|')
+    pattern += '|(('+months+') \d{1,2}(st|nd|th)*, \d{4})'
+    
     links = get_pages(query, 10) 
 
     for link in links:
@@ -86,7 +95,7 @@ def where(query):
     '''Returns a list of number of tuples that contain strings of the most common answers to the query'''
     
     word_list = []    
-    pattern = ' [A-Z][a-z]+, [A-Z][a-z]+ '
+    pattern = '(([A-Z][a-z]+ )*([A-Z][a-z]+), ([A-Z][a-z]+\s*)+)'
     links = get_pages(query, 10) 
 
     for link in links:
@@ -99,7 +108,7 @@ def where(query):
 
     
 if __name__ == "__main__":
-    find("Where is the Statue of Liberty")
+    find("Where is the white house")
     
 
     
