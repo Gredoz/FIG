@@ -4,11 +4,14 @@ app = Flask(__name__)
 
 @app.route("/",methods=["GET","POST"])
 def home():
+    if request.method == "GET":
+        return render_template("index.html")
     if request.method == "POST":
         query = request.form.get("query")
-        results = util.get_pages(query,1)
-        return util.get_text(query[0])
-    return render_template("index.html")
+        results = util.find(query)
+        if results is None:
+            return render_template("index.html",query=query,error="Your query is not valid")
+        return render_template("index.html",query=query,results=results)
         
 if __name__ == "__main__":
     app.debug = True;

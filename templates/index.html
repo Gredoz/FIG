@@ -5,9 +5,27 @@
   </head>
   <body>
     <h1>Welcome to Fully Improved Google, a.k.a. FIG</h1>
+    <h2>Ask a who, when or where question</h2>
+    <p>Warning: Search may take time to complete. Might as well pick up that book on your shelf that you always wanted to read, but never had the time to get started on.</p>
     <form method="POST">
       <input type="text" name="query">
       <input type="submit" name="search">
     </form>
+    {% if error %}
+    <h1>You asked: {{query}}</h1> 
+    {{error}}
+    {% endif %}
+    {% if results %}
+    <div>
+      <h1>The answer is <span style="color:blue">{{results[0][0]}}</span></h1>
+      <h1>You asked: {{query}}</h1>  
+      <h2>Not what you were looking for? Is it one of the below?</h2>
+      <ol>
+      {% for result in results %}
+      <li>{{result[0]}} has {{result[1]}} hits</li>
+      {% endfor %}
+      </ol>
+    </div>
+    {% endif %}
   </body>
 </html>

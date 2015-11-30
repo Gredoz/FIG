@@ -48,10 +48,12 @@ def find(query):
     #of the top 5 answers in descending order
     if (question == 'who'):
         ans = who(query,10,5)
-    elif (question == 'when',10,5):
-        ans = when(query)
-    elif (question == 'where',10,5):
-        ans = where(query)
+    elif (question == 'when'):
+        ans = when(query,10,5)
+    elif (question == 'where'):
+        ans = where(query,10,5)
+    else:
+        return None
     top = []
     for result in ans:
         top.append((result[0][0],result[1]))
